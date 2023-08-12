@@ -69,7 +69,7 @@ if __name__ == '__main__':
         print(perf_str)
         t2 = time()
         users_to_test = list(data_generator.test_set.keys())
-        ret = test(model, users_to_test, drop_flag=False)
+        ret = test(model, users_to_test, drop_flag=False).to(args.device)
 
         t3 = time()
 
@@ -112,5 +112,3 @@ if __name__ == '__main__':
                   '\t'.join(['%.5f' % r for r in pres[idx]]),
                   '\t'.join(['%.5f' % r for r in ndcgs[idx]]))
     print(final_perf)
-    
-    
