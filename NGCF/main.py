@@ -69,7 +69,7 @@ if __name__ == '__main__':
         print(perf_str)
         t2 = time()
         users_to_test = list(data_generator.test_set.keys())
-        ret = test(model, users_to_test, drop_flag=False).to(args.device)
+        ret = test(model, users_to_test, drop_flag=False)
 
         t3 = time()
 
