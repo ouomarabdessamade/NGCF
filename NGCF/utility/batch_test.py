@@ -65,15 +65,13 @@ def ranklist_by_sorted(user_pos_test, test_items, rating, Ks):
     return r, auc
 
 def get_performance(user_pos_test, r, auc, Ks):
-    precision, recall, ndcg = [], [], []
+    recall, ndcg = [], []
 
     for K in Ks:
-        precision.append(metrics.precision_at_k(r, K))
         recall.append(metrics.recall_at_k(r, K, len(user_pos_test)))
         ndcg.append(metrics.ndcg_at_k(r, K, user_pos_test))
         
-    return {'recall': np.array(recall), 'precision': np.array(precision),
-            'ndcg': np.array(ndcg), 'auc': auc}
+    return {'recall': np.array(recall), 'ndcg': np.array(ndcg), 'auc': auc}
 
 
 def test_one_user(x):
@@ -102,7 +100,7 @@ def test_one_user(x):
 
 
 def test(model, users_to_test, drop_flag=False, batch_test_flag=False):
-    result = {'precision': np.zeros(len(Ks)), 'recall': np.zeros(len(Ks)), 'ndcg': np.zeros(len(Ks)), 'auc': 0.}
+    result = {'recall': np.zeros(len(Ks)), 'ndcg': np.zeros(len(Ks)), 'auc': 0.}
 
     pool = multiprocessing.Pool(cores)
 
@@ -173,7 +171,6 @@ def test(model, users_to_test, drop_flag=False, batch_test_flag=False):
         count += len(batch_result)
 
         for re in batch_result:
-            result['precision'] += re['precision']/n_test_users
             result['recall'] += re['recall']/n_test_users
             result['ndcg'] += re['ndcg']/n_test_users
             result['auc'] += re['auc']/n_test_users
