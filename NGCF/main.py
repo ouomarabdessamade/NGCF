@@ -34,7 +34,7 @@ if __name__ == '__main__':
     cur_best_pre_0, stopping_step = 0, 0
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
-    loss_loger, pre_loger, rec_loger, ndcg_loger = [], [], [], []
+    loss_loger, rec_loger, ndcg_loger = [], [], []
     for epoch in range(args.epoch):
         t1 = time()
         loss= 0.
@@ -75,13 +75,11 @@ if __name__ == '__main__':
 
         loss_loger.append(loss)
         rec_loger.append(ret['recall'])
-        pre_loger.append(ret['precision'])
         ndcg_loger.append(ret['ndcg'])
 
         if args.verbose > 0:
-               perf_str = " Test : recall=[%s], precision=[%s], ndcg=[%s]"% \
+               perf_str = " Test : recall=[%s], ndcg=[%s]"% \
                     ('\t'.join(['%.5f' % r for r in ret['recall']]),
-                     '\t'.join(['%.5f' % r for r in ret['precision']]),
                      '\t'.join(['%.5f' % r for r in ret['ndcg']]))
                print(perf_str)
 
@@ -100,15 +98,13 @@ if __name__ == '__main__':
             print('save the weights in path: ', args.weights_path + str(epoch) + '.pkl')
 
     recs = np.array(rec_loger)
-    pres = np.array(pre_loger)
     ndcgs = np.array(ndcg_loger)
 
     best_rec_0 = max(recs[:, 0])
     idx = list(recs[:, 0]).index(best_rec_0)
 
-    final_perf = "Best Iter=[%d]@[%.1f]\t recall=[%s], precision=[%s], ndcg=[%s]" % \
+    final_perf = "Best Iter=[%d]@[%.1f]\t recall=[%s], ndcg=[%s]" % \
                  (idx, time() - t0, '\t'.join(['%.5f' % r for r in recs[idx]]),
                   '\t'.join(['%.5f' % r for r in recs[idx]]),
-                  '\t'.join(['%.5f' % r for r in pres[idx]]),
                   '\t'.join(['%.5f' % r for r in ndcgs[idx]]))
     print(final_perf)
